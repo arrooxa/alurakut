@@ -25,7 +25,43 @@ function ProfileSidebar(propriedades) {
   )
 }
 
+function ProfileRelationsBox(props) {
+
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {props.title} ({props.array.length})
+      </h2>
+
+      <ul>
+        {props.array.map((item) => {
+          return (
+            <li key={item.id}>
+              <a href={`/users/${item.login}`}>
+                <img src={item.avatar_url} />
+                <span>{item.login}</span>
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 export default function Home() {
+  const [seguidores, setSeguidores] = React.useState([])
+
+  React.useEffect(() => {
+    fetch('https://api.github.com/users/arrooxa/following')
+      .then(response => response.json())
+      .then((response) => {
+        console.log(response)
+        setSeguidores(response)
+      })
+  }, [])
+
   const githubUser = 'arrooxa';
 
   const [comunidades, setComunidades] = React.useState([{
@@ -101,6 +137,8 @@ export default function Home() {
 
 
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+          <ProfileRelationsBox title="Seguidores" array={seguidores} />
+
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
               Comunidades ({comunidades.length})
