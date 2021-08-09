@@ -54,12 +54,34 @@ export default function Home() {
   const [seguidores, setSeguidores] = React.useState([])
 
   React.useEffect(() => {
+
+    // GET
     fetch('https://api.github.com/users/arrooxa/following')
       .then(response => response.json())
       .then((response) => {
         console.log(response)
         setSeguidores(response)
       })
+
+    // POST
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'be69f96484fdd7101b8a7775726f7d',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        "query": `query { 
+        allCommunities{
+          title
+          id
+          imageUrl
+          creatorSlug
+      }}`})
+    })
+      .then((response) => response.json())
+      .then((response) => console.log(response))
   }, [])
 
   const githubUser = 'arrooxa';
